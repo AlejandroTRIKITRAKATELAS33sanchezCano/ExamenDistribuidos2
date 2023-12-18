@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista de Clientes</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <style>
+        @keyframes backgroundAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        body {
+            background: linear-gradient(90deg,
+                    rgba(66, 153, 225, 0.7),
+                    rgba(49, 130, 206, 0.7),
+                    rgba(43, 108, 176, 0.7),
+                    rgba(44, 82, 130, 0.7),
+                    rgba(42, 67, 101, 0.7)),
+                url('https://res.cloudinary.com/dbb56iwkk/image/upload/v1702927693/facebook-users-post-banner_ghbrnb.png');
+            background-size: cover;
+            background-blend-mode: multiply;
+            animation: backgroundAnimation 10s infinite;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+    </style>
+</head>
+
+<body class="text-white p-8">
+    <div class="max-w-xl mx-auto fade-in">
+        <h1 class="text-4xl font-bold mb-8">ID's Clientes</h1>
+        <div id="clientList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <!-- Lista de clientes se generará aquí -->
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script>
+        const socket = io.connect('http://localhost:3030');
+
+        socket.on('clientList', (clients) => {
+            const clientListElement = document.getElementById('clientList');
+            clientListElement.innerHTML = '';
+
+            clients.forEach((client) => {
+                const card = document.createElement('div');
+                card.className = 'bg-white p-6 rounded-md shadow-md hover:shadow-lg transition duration-300 mb-4';
+
+                const link = document.createElement('a');
+                link.href = `/user/${client.id}`;
+                link.textContent = `Cliente ${client.id}`;
+                link.className = 'text-blue-500 hover:underline';
+
+                card.appendChild(link);
+                clientListElement.appendChild(card);
+            });
+        });
+    </script>
+</body>
+
+</html>

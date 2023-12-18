@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Extraordinario</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+    />
+    <style>
+      @keyframes gradient-animation {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      body {
+        animation: gradient-animation 10s infinite linear;
+      }
+
+      .container {
+        max-width: 800px;
+      }
+
+      .header {
+        background-color: #4299e1;
+        padding: 2rem;
+        border-radius: 0 0 1rem 1rem;
+      }
+
+      .header h1 {
+        color: #ffffff;
+      }
+
+      .info-container {
+        background-color: #3182ce;
+        border-radius: 1rem;
+        padding: 2rem;
+        margin-top: -2rem;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      .info-category {
+        border-bottom: 2px solid #4a5568;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+      }
+
+      .info-category h2 {
+        color: #81e6d9;
+      }
+
+      .info-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .info-list li {
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+        color: #a0aec0;
+      }
+
+      .footer {
+        background-color: #4299e1;
+        padding: 1rem;
+        border-radius: 1rem;
+        margin-top: 2rem;
+        text-align: center;
+        color: #ffffff;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex flex-col items-center justify-center animate-fade-in">
+    <div class="container">
+      <div class="header">
+        <h1 class="text-4xl font-bold mb-2">Extraordinario</h1>
+        <p class="text-lg">Datos CPU</p>
+      </div>
+
+      <div class="info-container">
+        <div id="data">
+          <!-- Data will be injected here dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var socket = io();
+      socket.on("info", (data) => {
+        let div = document.getElementById("data");
+        div.innerHTML = ""; // Limpiar contenido anterior
+        for (const key of Object.keys(data)) {
+          div.innerHTML += `<div class='info-category mb-8'>
+                              <h2 class='text-2xl mb-3 font-semibold'>${key.toUpperCase()}</h2>
+                              <ul class='info-list'>
+                                ${Object.entries(data[key]).map(
+                                  ([key2, val]) =>
+                                    `<li>${key2}: ${val}</li>`
+                                ).join('')}
+                              </ul>
+                            </div>`;
+        }
+      });
+    </script>
+
+    <style>
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .animate-fade-in {
+        animation: fade-in 2s ease-out;
+      }
+    </style>
+  </body>
+</html>
